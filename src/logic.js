@@ -19,43 +19,43 @@ III: createTask
 */
 
 
-const projectManager = (() =>  {
+const projectManager = (project) =>  {
     let projects = [];
-    const registerProject = (project) => projects.push(project);
+    const registerProject = (project) => projects.push(project.title, project.tasks);
     const getProject = (project) => console.log(project);
 
-    return { getProject, registerProject };
-})();
+    return { projects, getProject, registerProject };
+};
 
 
-const projectCreator = (() => {    
+const projectCreator = (title) => {    
 
-    const createProject = (title, taskArray) => {
-        return { title, taskArray };
-    }
-    
-    const registerTask = (task) => tasks.push(task);
-    const getTask = (task) => console.log(task);
-    const changeCheckList = (task) => (task.checklist === true) ? false : true;
-    const changePriority = (task) => {
-        switch(task.priority) {
-            case 'low':
-                checklist.priority = 'medium';
-                break;
-            case 'medium':
-                checklist.priority = 'high';
-                break;
-            case 'high':
-                checklist.priority = 'low';
-                break;
-            default: break;
+    let tasks =  [];
+
+        const registerTask = (task) => tasks.push(task);
+        const getTasks = () => console.log(tasks);
+            
+        const changeChecklist = (task) => { task.checklist = !task.checklist; };
+        const changePriority = (task) => {
+            switch(task.priority) {
+                case 'low':
+                    task.priority = 'medium';
+                        break;
+                case 'medium':
+                    task.priority = 'high';
+                    break;
+                case 'high':
+                    task.priority = 'low';
+                    break;
+                default: break;
+            };
         };
-    };
+    
+        // need to make a remove task function;
+    
+    return { title, tasks, registerTask, getTasks, changeChecklist, changePriority };
+}
 
-    // need to make a remove task function;
-
-    return { getTask, registerTask, changePriority, changeCheckList, createProject };
-})();
 
 const createTask = (() => {
     const taskObject = (title, description, priority, notes, checklist) => {
@@ -68,8 +68,18 @@ const createTask = (() => {
     return { taskObject };
 })();
 
+const task1 = createTask.taskObject('Yes', 'Harry Maguire', 'low', 'Funny', true);
+const title1 = 'Milos';
+const project1 = projectCreator(title1);
+project1.registerTask(task1);
+let projectList = projectManager(project1);
+projectList.registerProject(project1);
 
-// I need a function to be able to manipulate the tasks after the projec has been created, meaning - I make a project, I make a function that can be called to create a task which will push it inside the array
+const task2 = createTask.taskObject('No', 'Lissandro Martinez', 'high', 'Not funny', false);
+const title2 = 'Milos';
+const project2 = projectCreator(title2);
+project2.registerTask(task2);
+projectList.registerProject(project2);
 
-// const makeShake = createTask.taskObject('Make a milk shake', 'This is about eating as much peanutbutter and banana as possible', 'high', 'Well I have to make a good deal out of this. It is not as strong as I thought it would be.', false);
-// const studyTime = createTask.taskObject('Study', 'I need to study for at least 5 hours today', 'low', 'It needs to be done within 20 days from now, so who cares)', false);
+project2.changePriority(task2);
+console.log(projectList.projects);
