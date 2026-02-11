@@ -18,15 +18,28 @@ const renderTask = (newTask) => {
     const renderNotes = createEl('p', 'renderNotes', newTask.notes);
     const renderChecklist = createEl('p', 'renderChecklist', newTask.checklist);
     const renderDate = createEl('p', 'renderDate', newTask.dueDate);
+    const editButton = createEl('button', 'editButton', 'Edit');
+    const removeTask = createEl('button', 'removeTask', 'X');
 
-    taskDiv.append(renderTitle, renderDesc, renderPriority, renderNotes, renderChecklist, renderDate);
+    taskDiv.append(renderTitle, renderDesc, renderPriority, renderNotes, renderChecklist, renderDate, editButton, removeTask);
     taskContainer.append(taskDiv);
 
     const taskDivs = document.querySelectorAll('.taskDiv');
-    taskDivs.forEach(div => div.style.borderLeft = '1px solid #6b7f09');
+    taskDivs.forEach(element => element.style.borderLeft = '1px solid #6b7f09');
+
+    editButton.addEventListener('click', () => {
+        renderTaskCard(newTask);
+    }); 
+    
+    removeTask.addEventListener('click', () => {
+        const activeProject = projectManager.getActiveProject();
+        activeProject.removeTask(newTask.taskId);
+
+        refreshTasks();
+    });
 };
 
-const renderTaskCard = () => {
+const renderTaskCard = (taskToEdit = null) => {
 
     const overlay = createEl('div', 'overlay');
 
@@ -64,6 +77,14 @@ const renderTaskCard = () => {
     overlay.append(taskCardDiv);
     document.body.append(overlay);
 
+    if(taskToEdit) {
+        taskTitle.value = taskToEdit.title;
+        descriptionT.value = taskToEdit.description;
+        notesT.value = taskToEdit.notes;
+        dueDate.value = taskToEdit.dueDate;
+        priorityT.value = taskToEdit.priority;
+    }
+
     confirm.addEventListener('click', () => {
         if(taskCardDiv) {};
         const titleValue = taskTitle.value;
@@ -72,30 +93,40 @@ const renderTaskCard = () => {
         const notesValue = notesT.value;
         const date = dueDate.value;
 
-        if(titleValue === '' ) {
-            alert('You must enter the title as well');
-            return;
-        }
-        const activeProject = projectManager.getActiveProject();
-``
-        if(activeProject) {
-            const newTask = createTask(
-                titleValue,
-                descValue,
-                priorityValue,
-                notesValue,
-                false,
-                new Date(date),
-            );
-            
-            activeProject.registerTask(newTask);
-            renderTask(newTask);
-            overlay.remove();
+        if(taskToEdit) {
+            taskToEdit.title = titleValue;
+            taskToEdit.description = descValue;
+            taskToEdit.priority = priorityValue;
+            taskToEdit.notes = notesValue;
+            taskToEdit.dueDate = date;
+
+            refreshTasks(projectManager.getActiveProject());
         }
         else {
-            alert('You need to choose the project first');
-        };
-
+            if(titleValue === '' ) {
+                alert('You must enter the title as well');
+                return;
+            }
+            const activeProject = projectManager.getActiveProject();
+    ``
+            if(activeProject) {
+                const newTask = createTask(
+                    titleValue,
+                    descValue,
+                    priorityValue,
+                    notesValue,
+                    false,
+                    new Date(date),
+                );
+                
+                activeProject.registerTask(newTask);
+                renderTask(newTask);
+            }
+            else {
+                alert('You need to choose the project first');
+            };
+        }
+        overlay.remove();
     });
 }
 

@@ -32,11 +32,6 @@ const projectCreator = (title) => {
 
         const registerTask = (task) => tasks.push(task);
         const getTasks = () => tasks;
-        const activeTask = null;
-        const taskStatus = (task) => {
-            activeTask = task;
-        };
-        const getActiveTask = () => activeTask;
 
         const changeChecklist = (task) => { task.checklist = !task.checklist; };
         const changePriority = (task) => {
@@ -55,6 +50,7 @@ const projectCreator = (title) => {
         };
     
     const projectId = crypto.randomUUID(); // added randomUUID because of the ease of deletion
+    const getTaskId = () => taskId;
     const removeTask = (taskId) => {
         const i = tasks.findIndex(t => t.taskId === taskId); 
         if(i !== -1) {
@@ -62,7 +58,7 @@ const projectCreator = (title) => {
         };
     };
 
-    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, changeChecklist, changePriority, removeTask, taskStatus, activeTask, getActiveTask };
+    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, changeChecklist, changePriority, removeTask, getTaskId };
 }
 
 // another function, this time an IIFE one, which is used for creating tasks
