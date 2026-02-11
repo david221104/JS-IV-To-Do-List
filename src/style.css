@@ -11,8 +11,6 @@ body {
 
 
 
-
-
 /* Your Projects */
 
 #your-projects {
@@ -21,6 +19,14 @@ body {
     background-color: #311568;
     height: auto;
     width: 20rem;
+    color: #fff;
+    justify-content: space-between;
+}
+
+#project-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .projectDiv {
@@ -30,7 +36,6 @@ body {
     height: 40px;
     width: auto;
     background-color: red;
-    border-bottom: 1px solid rgb(255, 255, 255);
 }
 
 .titleP {
@@ -54,55 +59,48 @@ body {
 
 
 
-/* Your Tasks */
+/* Task Container */
 
-#your-tasks {
+.taskCardDiv {
     display: flex;
     flex-direction: column;
-    background-color: #816ea5;
-    height: auto;
-    width: 20rem;
+    align-items: center;
+    justify-content: space-between;
+    background-color: red;
+    width: 300px;
+    height: 300px;
+}
+
+#titleInput {
+    height: 20px;
+    width: 250px;
+    margin-bottom: 100px;
 }
 
 .taskDiv {
     display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 200px;
+    height: 30px;
+}
+
+
+/* Coating for popup and popup */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.541);
+    display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    height: 40px;
-    width: auto;
-    background-color: rgb(165, 166, 116);
-    border-bottom: 1px solid #fff;
+    z-index: 1000; /* becomes above everything */
 }
 
-.titleT {
-    height: 15px;
-    width: 15px;
-    background-color: rgb(65, 255, 138);
-    margin-right: 20px;
-}
-
-.removeTIcon {
-    height: 15px;
-    width: 15px;
-    background-color: rgb(70, 25, 25);
-    margin-right: 20px;
-}
-
-.statusT {
-    height: 15px;
-    width: 15px;
-    background-color: rgb(255, 255, 255);
-    margin-right: 20px;
-}
-
-
-/* Task Container */
-
-
-
-
-
-/* Popup for project */
 .popupDiv {
     display: flex;
     align-items: center;
@@ -110,11 +108,5 @@ body {
     flex-direction: column; 
     width: 300px;
     height: 300px;
-    background-color: #411616b1;
-}
-
-#titleInput {
-    height: 20px;
-    width: 250px;
-    margin-bottom: 100px;
+    background-color: #fff;
 }

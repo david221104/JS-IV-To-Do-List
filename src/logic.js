@@ -16,18 +16,28 @@ const projectManager = (() =>  {
         };
     };
 
+    let activeProject = null;
+    const projectStatus = (project) => {
+        activeProject = project;
+    }
+    const getActiveProject = () => activeProject;
 
-    return { get currentProjects() { return projects }, getProject, registerProject, removeProject };
+    return { get currentProjects() { return projects }, getProject, registerProject, removeProject, activeProject, projectStatus, getActiveProject };
 })();
 
 // this factory function in particular makes projects and controlls tasks, basically a task manager and a project creator
 const projectCreator = (title) => {    
 
-    let tasks =  [];
+    let tasks = [];
 
         const registerTask = (task) => tasks.push(task);
         const getTasks = () => console.log(tasks);
-            
+        const activeTask = null;
+        const taskStatus = (task) => {
+            activeTask = task;
+        };
+        const getActiveTask = () => activeTask;
+
         const changeChecklist = (task) => { task.checklist = !task.checklist; };
         const changePriority = (task) => {
             switch(task.priority) {
@@ -52,37 +62,15 @@ const projectCreator = (title) => {
         };
     };
 
-    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, changeChecklist, changePriority, removeTask };
+    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, changeChecklist, changePriority, removeTask, taskStatus, activeTask, getActiveTask };
 }
 
 // another function, this time an IIFE one, which is used for creating tasks
-const createTask = (() => {
-    const taskObject = (title, description, priority, notes, checklist, dueDate) => {
+const createTask = ( title, description, priority, notes, checklist, dueDate ) => {
         if(checklist === true) {
             console.log('Task done');
         }
         else { console.log('Task not done'); };
-        const prettyDate = format(dueDate, 'dd.MM.yyyy'); // the actual usage of the date-fns
         const taskId = crypto.randomUUID();
-        return { title, description, priority, notes, checklist, dueDate: prettyDate, taskId }; 
-    };
-    return { taskObject };
-})();
-
-// const task1 = createTask.taskObject('Yes', 'Harry Maguire', 'low', 'Funny', true, new Date());
-// const title1 = 'Milos';
-// const project1 = projectCreator(title1);
-// project1.registerTask(task1);
-// let projectList = projectManager(project1);
-// projectList.registerProject(project1);
-
-// const task2 = createTask.taskObject('No', 'Lissandro Martinez', 'high', 'Not funny', false, new Date());
-// const title2 = 'Milos';
-// const project2 = projectCreator(title2);
-// project2.registerTask(task2);
-// projectList.registerProject(project2);
-
-// project2.changePriority(task2);
-
-// projectList.removeProject(project1.projectId);
-// console.log(projectList.currentProjects);
+        return { title, description, priority, notes, checklist, dueDate, taskId };
+};
