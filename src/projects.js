@@ -1,5 +1,5 @@
 export { renderProject, createEl };
-import { renderTaskCard, renderTask } from './tasks.js'
+import { renderTaskCard, refreshTasks } from './tasks.js'
 
 const newTaskButton = document.querySelector('#new-task');
 const p = document.querySelector('#project-container');
@@ -29,9 +29,12 @@ const renderProject = (project) => {
         projectDiv.style.border = '2px solid black';
         projectManager.projectStatus(project);
         console.log('Active project:', project.title);
-        newTaskButton.addEventListener('click', () => {
-            renderTaskCard();
-        });
+        refreshTasks();
     });
 }
 
+if(newTaskButton) {
+    newTaskButton.addEventListener('click', () => {
+        renderTaskCard();
+    });
+}

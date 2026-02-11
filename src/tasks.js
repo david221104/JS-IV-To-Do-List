@@ -1,8 +1,14 @@
-import { createEl } from './projects.js';
 import { projectManager, projectCreator, createTask } from './logic.js';
-export { renderTaskCard, renderTask }
+export { renderTaskCard, renderTask, refreshTasks }
 
 const taskContainer = document.querySelector('#task-container');
+
+function createEl(tag, className, text = '') {
+    const element = document.createElement(tag);
+    if(className) element.classList.add(className);
+    if(text) element.textContent = text;
+    return element;
+}
 
 const renderTask = (newTask) => {
     const taskDiv = createEl('div', 'taskDiv');
@@ -15,41 +21,21 @@ const renderTask = (newTask) => {
 
     taskDiv.append(renderTitle, renderDesc, renderPriority, renderNotes, renderChecklist, renderDate);
     taskContainer.append(taskDiv);
+
+    const taskDivs = document.querySelectorAll('.taskDiv');
+    taskDivs.forEach(div => div.style.borderLeft = '1px solid #6b7f09');
 };
 
-const popup = (e) => {
-    
-    const overlay = createEl('div', 'overlay');
+const renderTaskCard = () => {
 
-    const popupDiv = createEl('div', 'popupDiv');
-    const titleInput = document.createElement('input');
-    titleInput.setAttribute('type', 'text');
-    titleInput.setAttribute('id', 'titleInput');
-    const popupButton = createEl('button', 'popupButton', 'Confirm');
-    popupDiv.append(titleInput, popupButton);
-    overlay.append(popupDiv);
-    document.body.append(overlay);
-    popupButton.addEventListener('click', () => {
-        
-        if(popupDiv) {};
-        const inputTitle = titleInput.value;
-        if(inputTitle === '') {
-            alert('You entered nothing, popup closes');
-            overlay.remove();
-            return; 
-        }
-        e(inputTitle);
-        overlay.remove();
-    });
+    const overlay = createEl('div', 'overlay');
 
     overlay.addEventListener('click', (e) => {
         if(e.target === overlay) {
             overlay.remove();
-        };
+        }
     });
-};
 
-const renderTaskCard = () => {
     const taskCardDiv = createEl('div', 'taskCardDiv');
     const taskTitle = document.createElement('input');
     taskTitle.setAttribute('type', 'text');
@@ -75,15 +61,21 @@ const renderTaskCard = () => {
     const confirm = createEl('button', 'confirmTask', 'Confirm');
 
     taskCardDiv.append(taskTitle, descriptionT, taskPriority, notesT, confirm);
-    taskContainer.append(taskCardDiv);
+    overlay.append(taskCardDiv);
+    document.body.append(overlay);
 
     confirm.addEventListener('click', () => {
+        if(taskCardDiv) {};
         const titleValue = taskTitle.value;
         const descValue = descriptionT.value;
         const priorityValue = priorityT.value;
         const notesValue = notesT.value;
         const date = dueDate.value;
 
+        if(titleValue === '' ) {
+            alert('You must enter the title as well');
+            return;
+        }
         const activeProject = projectManager.getActiveProject();
 ``
         if(activeProject) {
@@ -97,12 +89,21 @@ const renderTaskCard = () => {
             );
             
             activeProject.registerTask(newTask);
-            taskCardDiv.remove();
             renderTask(newTask);
+            overlay.remove();
         }
         else {
             alert('You need to choose the project first');
         };
 
     });
+}
+
+const refreshTasks = () => {
+    const taskContainer = document.querySelector('#task-container');
+    taskContainer.innerHTML = '';
+    const activeProject = projectManager.getActiveProject();
+    if(activeProject) {
+        activeProject.getTasks().forEach(task => renderTask(task));
+    }
 }

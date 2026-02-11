@@ -31,7 +31,7 @@ const projectCreator = (title) => {
     let tasks = [];
 
         const registerTask = (task) => tasks.push(task);
-        const getTasks = () => console.log(tasks);
+        const getTasks = () => tasks;
         const activeTask = null;
         const taskStatus = (task) => {
             activeTask = task;

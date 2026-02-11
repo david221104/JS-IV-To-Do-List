@@ -80,9 +80,12 @@ body {
 .taskDiv {
     display: flex;
     flex-direction: row;
-    gap: 20px;
-    width: 200px;
+    justify-content: center;
+    gap: 11rem;
+    align-items: center;
+    width: calc(100vw - 20rem);
     height: 30px;
+    background-color: #edff94;
 }
 
 
