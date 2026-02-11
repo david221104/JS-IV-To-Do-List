@@ -1,5 +1,7 @@
 import { projectManager, projectCreator, createTask } from './logic.js';
 export { renderTaskCard, renderTask, refreshTasks }
+// date-fns format for dueDate
+import { format } from 'date-fns';
 
 const taskContainer = document.querySelector('#task-container');
 
@@ -12,31 +14,83 @@ function createEl(tag, className, text = '') {
 
 const renderTask = (newTask) => {
     const taskDiv = createEl('div', 'taskDiv');
-    const renderTitle = createEl('p', 'renderTitle', newTask.title);
-    const renderDesc = createEl('p', 'renderDesc', newTask.description);
-    const renderPriority = createEl('p', 'renderPriority', newTask.priority);
-    const renderNotes = createEl('p', 'renderNotes', newTask.notes);
-    const renderChecklist = createEl('p', 'renderChecklist', newTask.checklist);
-    const renderDate = createEl('p', 'renderDate', newTask.dueDate);
+    const renderChecklist = createEl('p', 'renderChecklist', 'Checklist: Not done');
+    const renderTitle = createEl('p', 'renderTitle', `Title: ${newTask.title}`);
+    const renderDate = createEl('div', 'renderDate');
+    if(newTask.dueDate) {
+        renderDate.textContent = 'Due date: ' + format(new Date(newTask.dueDate), 'dd.MM.yyyy');
+    }
+    else {
+        dateDiv.textContent = 'No date';
+    }
     const editButton = createEl('button', 'editButton', 'Edit');
     const removeTask = createEl('button', 'removeTask', 'X');
-
-    taskDiv.append(renderTitle, renderDesc, renderPriority, renderNotes, renderChecklist, renderDate, editButton, removeTask);
+    const priorityDiv = createEl('div', 'priorityDiv', newTask.priority);
+    priorityDiv.style.backgroundColor = 'orange';
+    taskDiv.append(renderTitle, renderChecklist, renderDate, priorityDiv, editButton, removeTask);
     taskContainer.append(taskDiv);
 
     const taskDivs = document.querySelectorAll('.taskDiv');
     taskDivs.forEach(element => element.style.borderLeft = '1px solid #6b7f09');
 
-    editButton.addEventListener('click', () => {
+    editButton.addEventListener('click', (e) => {
+        e.stopPropagation();
         renderTaskCard(newTask);
     }); 
     
-    removeTask.addEventListener('click', () => {
+    removeTask.addEventListener('click', (e) => {
+        e.stopPropagation();
         const activeProject = projectManager.getActiveProject();
         activeProject.removeTask(newTask.taskId);
 
         refreshTasks();
     });
+
+    renderChecklist.addEventListener ('click', (e) => {
+        e.stopPropagation();
+        const activeProject = projectManager.getActiveProject();
+        if(newTask.checklist === false) {
+            activeProject.changeChecklist(newTask);
+            renderChecklist.textContent = 'Checklist: Done';
+        }
+        else {
+            activeProject.changeChecklist(newTask);
+            renderChecklist.textContent = 'Checklist: Not done';
+        }
+    });
+
+    priorityDiv.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const activeProject = projectManager.getActiveProject();
+        activeProject.changePriority(newTask);
+        priorityDiv.textContent = newTask.priority;
+        if(newTask.priority === 'low') priorityDiv.style.backgroundColor = 'green';    
+        if(newTask.priority === 'medium') priorityDiv.style.backgroundColor = 'orange';    
+        if(newTask.priority === 'high') priorityDiv.style.backgroundColor = 'red';            
+    });
+
+    taskDiv.addEventListener('click', (e) => {
+        if(taskDiv.classList.contains('expanded')) {
+            const existingDetails = taskDiv.querySelector('.tasks-details');
+            if(existingDetails) {
+                existingDetails.remove();
+            }
+            taskDiv.classList.remove('expanded');
+        }
+        else {
+            const detailsDiv = document.createElement('div');
+            detailsDiv.classList.add('tasks-details');
+            const renderDesc = createEl('p', 'renderDesc', `Description: ${newTask.description || 'No description'}`);
+            const renderNotes = createEl('p', 'renderNotes', `Notes: ${newTask.notes || 'No notes'}`);
+            detailsDiv.append(renderDesc, renderNotes);
+            taskDiv.append(detailsDiv);
+            taskDiv.classList.add('expanded');
+
+            detailsDiv.style.width = '100%';
+            taskDiv.style.flexWrap = 'wrap';
+        }
+    });
+
 };
 
 const renderTaskCard = (taskToEdit = null) => {
@@ -73,7 +127,7 @@ const renderTaskCard = (taskToEdit = null) => {
 
     const confirm = createEl('button', 'confirmTask', 'Confirm');
 
-    taskCardDiv.append(taskTitle, descriptionT, taskPriority, notesT, confirm);
+    taskCardDiv.append(taskTitle, descriptionT, taskPriority, notesT, dueDate, confirm);
     overlay.append(taskCardDiv);
     document.body.append(overlay);
 

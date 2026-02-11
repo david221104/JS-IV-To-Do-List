@@ -1,6 +1,3 @@
-// date-fns format for dueDate
-import { format } from 'date-fns';
-
 // exporting functions so that they can be used in index.js
 export { projectManager, projectCreator, createTask };
 
@@ -63,10 +60,7 @@ const projectCreator = (title) => {
 
 // another function, this time an IIFE one, which is used for creating tasks
 const createTask = ( title, description, priority, notes, checklist, dueDate ) => {
-        if(checklist === true) {
-            console.log('Task done');
-        }
-        else { console.log('Task not done'); };
+        checklist = false;
         const taskId = crypto.randomUUID();
         return { title, description, priority, notes, checklist, dueDate, taskId };
 };

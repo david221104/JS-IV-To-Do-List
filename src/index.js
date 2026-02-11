@@ -41,7 +41,7 @@ const popup = (e) => {
 newProject.addEventListener('click', (e) => {
     popup(function(inputTitle) {
         const newProject = projectCreator(inputTitle);
-        const list = projectManager.registerProject(newProject);
+        projectManager.registerProject(newProject);
         renderProject(newProject);
     });
 });

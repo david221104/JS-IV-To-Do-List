@@ -17,10 +17,9 @@ function createEl(tag, className, text = '') {
 const renderProject = (project) => {
     const projectDiv = createEl('div', 'projectDiv');  
     const titleP = createEl('p', 'titleP', project.title);
-    const removePIcon = createEl('div', 'removePIcon');
-    const statusP = createEl('div', 'statusP');
+    const removePIcon = createEl('div', 'removePIcon', 'X');
 
-    projectDiv.append(titleP, statusP, removePIcon);
+    projectDiv.append(titleP, removePIcon);
     p.append(projectDiv);
 
     projectDiv.addEventListener('click', () => {     
@@ -30,6 +29,14 @@ const renderProject = (project) => {
         projectManager.projectStatus(project);
         console.log('Active project:', project.title);
         refreshTasks();
+    });
+
+    removePIcon.addEventListener('click', (e) => {
+        e.stopPropagation();
+        projectManager.removeProject(project.projectId);
+        projectDiv.remove();
+        const tasks = document.querySelector('#task-container');
+        if(tasks) tasks.innerHTML = '';
     });
 }
 
