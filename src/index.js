@@ -10,11 +10,12 @@ const popup = (e) => {
     const overlay = createEl('div', 'overlay');
 
     const popupDiv = createEl('div', 'popupDiv');
+    const titlePopup = createEl('div', 'titlePopup', 'Your project name:');
     const titleInput = document.createElement('input');
     titleInput.setAttribute('type', 'text');
     titleInput.setAttribute('id', 'titleInput');
     const popupButton = createEl('button', 'popupButton', 'Confirm');
-    popupDiv.append(titleInput, popupButton);
+    popupDiv.append(titlePopup ,titleInput, popupButton);
     overlay.append(popupDiv);
     document.body.append(overlay);
     popupButton.addEventListener('click', () => {
@@ -22,8 +23,9 @@ const popup = (e) => {
         if(popupDiv) {};
         const inputTitle = titleInput.value;
         if(inputTitle === '') {
-            alert('You entered nothing, popup closes');
-            overlay.remove();
+            const errorPopup = createEl('p', 'errorPopup', 'Please enter the title');
+            errorPopup.style.color = 'red';
+            popupDiv.append(errorPopup);
             return; 
         }
         e(inputTitle);

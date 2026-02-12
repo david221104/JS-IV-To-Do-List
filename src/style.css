@@ -47,6 +47,16 @@ body {
     width: 15px;
     background-color: yellow;
     margin-right: 20px;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.removePIcon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
 }
 
 .statusP {
@@ -65,27 +75,116 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    background-color: red;
-    width: 300px;
-    height: 300px;
+    justify-content: center;
+    gap: 40px;
+    background-color: rgb(140, 160, 207);
+    width: 600px;
+    height: 700px;
+    border-radius: 30px;
 }
 
-#titleInput {
-    height: 20px;
-    width: 250px;
-    margin-bottom: 100px;
-}
 
 .taskDiv {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    gap: 11rem;
     align-items: center;
     width: calc(100vw - 20rem);
-    height: 30px;
+    height: 90px;
     background-color: #edff94;
+}
+
+.noDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 200px;
+}
+
+.tasks-details {
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+    padding: 0 20px;
+    flex-direction: column;
+
+}
+
+.renderChecklist:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.editButton {
+    width: 60px;
+    height: 25px;
+    border: none;
+    background-color: #edff94;
+    border-radius: 10px;
+}
+
+.editButton:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    background-color: #d3e37f;
+}
+
+.removeTask {
+    border-radius: 50%;
+    background-color: #edff94;
+    border: none;
+    width: 45px;
+    height: 45px;
+}
+
+.removeTask:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+    background-color: #d3e37f;
+}
+
+.taskTitleDiv, .descriptionTDiv, .notesTDiv, .dueDateDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+#taskTitle, #notesT, #dueDate {
+    width: 250px;
+    height: 25px;
+    font-size: 15px;
+    padding: 4px;
+    border-style: none;
+    border-radius: 7px;
+}
+
+#dueDate {
+    display: flex;
+    justify-content: center;
+}
+
+#descriptionT {
+    width: 450px;
+    height: 250px;
+    border-radius: 20px;
+    border-style: none;
+    padding: 20px;
+}
+
+.descriptionTText, .taskTitleText, .notesTText, .dueDateText {
+    margin: 0;
+}
+
+.confirmTask {
+    width: 200px;
+    height: 40px;
+    border: none;
+    font-size: 15px;
+    border-radius: 10px;
 }
 
 .priorityDiv {
@@ -93,6 +192,19 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+.priorityDiv:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.expanded {
+    height: 300px;
 }
 
 /* Coating for popup and popup */
@@ -115,7 +227,35 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column; 
-    width: 300px;
+    width: 400px;
     height: 300px;
     background-color: #fff;
+    gap: 3rem;
+    font-size: 1.3rem;
+    border-radius: 2rem;
 }
+
+#titleInput {
+    margin: 0;
+    height: 30px;
+    font-size: 20px;
+    border-radius: 20px; 
+    padding: 10px;   
+    border: 1px solid red;
+}
+
+.popupButton {
+    width: 120px;
+    height: 30px;
+    background-color: rgb(124, 124, 220);
+    border-style: none;
+    font-size: 20xp;
+    border-radius: 6px;
+}
+
+.popupButton:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
+}
+

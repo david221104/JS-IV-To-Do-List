@@ -27,7 +27,9 @@ const renderTask = (newTask) => {
     const removeTask = createEl('button', 'removeTask', 'X');
     const priorityDiv = createEl('div', 'priorityDiv', newTask.priority);
     priorityDiv.style.backgroundColor = 'orange';
-    taskDiv.append(renderTitle, renderChecklist, renderDate, priorityDiv, editButton, removeTask);
+    const noDetails = createEl('div', 'noDetails');
+    noDetails.append(renderTitle, renderChecklist, renderDate, priorityDiv, editButton, removeTask);
+    taskDiv.append(noDetails);
     taskContainer.append(taskDiv);
 
     const taskDivs = document.querySelectorAll('.taskDiv');
@@ -52,10 +54,12 @@ const renderTask = (newTask) => {
         if(newTask.checklist === false) {
             activeProject.changeChecklist(newTask);
             renderChecklist.textContent = 'Checklist: Done';
+            renderChecklist.style.backgroundColor = 'green';
         }
         else {
             activeProject.changeChecklist(newTask);
             renderChecklist.textContent = 'Checklist: Not done';
+            renderChecklist.style.backgroundColor = '';
         }
     });
 
@@ -85,9 +89,7 @@ const renderTask = (newTask) => {
             detailsDiv.append(renderDesc, renderNotes);
             taskDiv.append(detailsDiv);
             taskDiv.classList.add('expanded');
-
             detailsDiv.style.width = '100%';
-            taskDiv.style.flexWrap = 'wrap';
         }
     });
 
@@ -104,30 +106,39 @@ const renderTaskCard = (taskToEdit = null) => {
     });
 
     const taskCardDiv = createEl('div', 'taskCardDiv');
+
+    const taskTitleDiv = createEl('div', 'taskTitleDiv');
+    const taskTitleText = createEl('p', 'taskTitleText', 'Title: ');
     const taskTitle = document.createElement('input');
     taskTitle.setAttribute('type', 'text');
     taskTitle.setAttribute('id', 'taskTitle');
-    
-    const descriptionT = document.createElement('input');
-    descriptionT.setAttribute('type', 'text');
+    taskTitleDiv.append(taskTitleText, taskTitle);
+
+    const descriptionTDiv = createEl('div', 'descriptionTDiv');
+    const descriptionTText = createEl('p', 'descriptionTText', 'Description: ');
+    const descriptionT = document.createElement('textArea');
     descriptionT.setAttribute('id', 'descriptionT'); 
+    descriptionTDiv.append(descriptionTText, descriptionT);
 
-    const taskPriority = createEl('div', 'taskPriority');
-
+    const notesTDiv = createEl('div', 'notesTDiv');
+    const notesTText = createEl('p', 'notesTText', 'Notes: ');
     const notesT = document.createElement('input');
     notesT.setAttribute('type', 'text');
     notesT.setAttribute('id', 'notesT'); 
+    notesTDiv.append(notesTText, notesT);
 
+    const dueDateDiv = createEl('div', 'dueDateDiv');
+    const dueDateText = createEl('p', 'dueDateText', 'Select due date: ');
     const dueDate = document.createElement('input');
     dueDate.setAttribute('type', 'date');
     dueDate.setAttribute('id', 'dueDate');
+    dueDateDiv.append(dueDateText, dueDate);
 
     let priorityT = createEl('div', 'priorityT');
     priorityT.value = 'medium';
 
     const confirm = createEl('button', 'confirmTask', 'Confirm');
-
-    taskCardDiv.append(taskTitle, descriptionT, taskPriority, notesT, dueDate, confirm);
+    taskCardDiv.append(taskTitleDiv, notesTDiv, dueDateDiv, descriptionTDiv, confirm);
     overlay.append(taskCardDiv);
     document.body.append(overlay);
 
