@@ -1,5 +1,5 @@
 export { renderProject, createEl };
-import { renderTaskCard, refreshTasks } from './tasks.js'
+import { renderTaskCard, refreshTasks, setLocalStorage } from './tasks.js'
 
 const newTaskButton = document.querySelector('#new-task');
 const p = document.querySelector('#project-container');
@@ -28,6 +28,7 @@ const renderProject = (project) => {
         projectDiv.style.border = '2px solid black';
         projectManager.projectStatus(project);
         console.log('Active project:', project.title);
+        setLocalStorage();
         refreshTasks();
     });
 
@@ -37,11 +38,14 @@ const renderProject = (project) => {
         projectDiv.remove();
         const tasks = document.querySelector('#task-container');
         if(tasks) tasks.innerHTML = '';
+        setLocalStorage();
+        refreshTasks();
     });
 }
 
 if(newTaskButton) {
     newTaskButton.addEventListener('click', () => {
+        setLocalStorage();
         renderTaskCard();
     });
 }

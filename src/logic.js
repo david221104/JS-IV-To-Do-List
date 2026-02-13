@@ -5,7 +5,7 @@ export { projectManager, projectCreator, createTask };
 const projectManager = (() =>  {
     let projects = [];
     const registerProject = (project) => projects.push(project);
-    const getProject = () => console.log(projects);
+    const getProjects = () => console.log(projects);
     const removeProject = (projectId) => {
         const i = projects.findIndex(p => p.projectId === projectId);
         if(i !== -1) {
@@ -13,13 +13,45 @@ const projectManager = (() =>  {
         };
     };
 
+    const loadProjects = (data) => {
+        projects = data.map(savedProject => {
+            const revived = projectCreator(savedProject.title);
+
+            revived.projectId = savedProject.projectId;    
+            if(savedProject.currentTasks) {
+                revived.setTasks(savedProject.currentTasks);
+            }
+
+            return revived;
+        });
+    };
+
+    const saveActiveProject = () => {
+    if (activeProject) {
+        localStorage.setItem('activeProjectId', activeProject.projectId);
+    } else {
+        localStorage.removeItem('activeProjectId');
+    }
+};
+
+const loadActiveProject = () => {
+    const activeId = localStorage.getItem('activeProjectId');
+    if (activeId) {
+        activeProject = projects.find(p => p.projectId === activeId);
+    }
+};
+
     let activeProject = null;
     const projectStatus = (project) => {
         activeProject = project;
     }
     const getActiveProject = () => activeProject;
+    const saveProjects = () => {
+        localStorage.setItem('projects', JSON.stringify(projects));
+    };
 
-    return { get currentProjects() { return projects }, getProject, registerProject, removeProject, activeProject, projectStatus, getActiveProject };
+    return { get currentProjects() { return projects }, getProjects, registerProject, removeProject, activeProject, 
+            projectStatus, getActiveProject, saveProjects, saveProjects, loadProjects, saveActiveProject, loadActiveProject };
 })();
 
 // this factory function in particular makes projects and controlls tasks, basically a task manager and a project creator
@@ -46,6 +78,10 @@ const projectCreator = (title) => {
             };
         };
     
+    const setTasks = (loadedTasks) => {
+        tasks = loadedTasks;
+    } 
+     
     const projectId = crypto.randomUUID(); // added randomUUID because of the ease of deletion
     const getTaskId = () => taskId;
     const removeTask = (taskId) => {
@@ -55,7 +91,8 @@ const projectCreator = (title) => {
         };
     };
 
-    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, changeChecklist, changePriority, removeTask, getTaskId };
+    return { get currentTasks() { return tasks; }, title, projectId, registerTask, getTasks, 
+             changeChecklist, changePriority, removeTask, getTaskId, setTasks };
 }
 
 // another function, this time an IIFE one, which is used for creating tasks
